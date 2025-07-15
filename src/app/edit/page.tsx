@@ -6,6 +6,7 @@ import ExperienceCard from "@/components/ui/form/ExperienceCard";
 import InputImageCard from "@/components/ui/form/InputImageCard";
 import ProfileCard from "@/components/ui/form/ProfileCard";
 import { usePortfolioStore } from "@/stores/portfolioStore";
+import PreviewCard from "@/components/PreviewCard";
 
 export default function Edit() {
     const {
@@ -37,7 +38,7 @@ export default function Edit() {
 
     return (
         <div className="font-[family-name:var(--font-geist-sans)]">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1px_1fr] lg:gap-x-[52px]">
+            <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_1px_1fr] lg:gap-x-[52px]">
                 {/* Editor Form Section */}
                 <div>
                     <div className="flex items-center justify-between mb-7">
@@ -86,7 +87,7 @@ export default function Edit() {
                             <Button
                                 variant="outline"
                                 onClick={addExperience}
-                                className="w-full"
+                                className="w-full cursor-pointer"
                                 disabled={portfolio.experiences.length >= 10}
                             >
                                 + Tambah Portofolio
@@ -100,41 +101,7 @@ export default function Edit() {
 
                 {/* Preview Section */}
                 <div>
-                    <h2 className="text-2xl font-semibold mb-7">Preview</h2>
-                    <div className="p-4 border rounded-md space-y-4">
-                        <h3 className="text-lg font-bold">
-                            {portfolio.profile.name || "Nama Anda"}
-                        </h3>
-                        <p>{portfolio.profile.job_title || "Jabatan Anda"}</p>
-                        <p className="text-sm text-gray-600">
-                            {portfolio.profile.job_description ||
-                                "Deskripsi singkat Anda."}
-                        </p>
-                        <hr />
-                        <h4 className="font-semibold mt-4">
-                            Pengalaman Kerja:
-                        </h4>
-                        {portfolio.experiences.length > 0 ? (
-                            portfolio.experiences.map((exp) => (
-                                <div key={exp.id} className="p-2 border-t">
-                                    <p className="font-bold">
-                                        {exp.position || "Posisi"} di{" "}
-                                        {exp.company || "Perusahaan"}
-                                    </p>
-                                    <p className="text-xs text-gray-500">
-                                        {exp.start_date} - {exp.end_date}
-                                    </p>
-                                    <p className="text-sm mt-1">
-                                        {exp.description}
-                                    </p>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-sm text-gray-400">
-                                Belum ada pengalaman kerja.
-                            </p>
-                        )}
-                    </div>
+                    <PreviewCard portfolio={portfolio} title="Preview" />
                 </div>
             </div>
         </div>

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { get, set, del } from "idb-keyval";
 
+// --- Interfaces ---
 interface Profile {
     name: string;
     job_title: string;
@@ -41,18 +43,32 @@ interface PortfolioActions {
     deleteExperience: (id: string) => void;
 }
 
+const indexedDBStorage = {
+    getItem: async (name: string) => {
+        console.log(`(IndexedDB) Getting -> ${name}`);
+        return await get(name);
+    },
+    setItem: async (name: string, value: unknown) => {
+        console.log(`(IndexedDB) Setting -> ${name}`);
+        await set(name, value);
+    },
+    removeItem: async (name: string) => {
+        console.log(`(IndexedDB) Deleting -> ${name}`);
+        await del(name);
+    },
+};
+
 // Create the store
 export const usePortfolioStore = create<PortfolioState & PortfolioActions>()(
     persist(
         (set) => ({
-            // INITIAL STATE
+            // --- INITIAL STATE and ACTIONS ---
             portfolio: {
                 profile: { name: "", job_title: "", job_description: "" },
                 images: { background_image: "", profile_image: "" },
                 experiences: [],
             },
 
-            // ACTIONS
             updateProfileField: (field, value) =>
                 set((state) => ({
                     portfolio: {
@@ -86,7 +102,6 @@ export const usePortfolioStore = create<PortfolioState & PortfolioActions>()(
                         experiences: [
                             ...state.portfolio.experiences,
                             {
-                                // Add a new blank experience
                                 id: `exp-${Date.now()}`,
                                 position: "",
                                 company: "",
@@ -110,7 +125,7 @@ export const usePortfolioStore = create<PortfolioState & PortfolioActions>()(
         }),
         {
             name: "portfolio-storage",
-            storage: createJSONStorage(() => localStorage),
+            storage: createJSONStorage(() => indexedDBStorage),
         }
     )
 );
