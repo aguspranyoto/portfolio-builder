@@ -101,7 +101,7 @@ export default function Edit() {
 
                 {/* Preview Section */}
                 <div>
-                    <PreviewCard portfolio={portfolio} title="Preview" />
+                    <PreviewCard title="Preview" />
                 </div>
             </div>
         </div>

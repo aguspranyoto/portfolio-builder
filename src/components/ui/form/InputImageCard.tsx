@@ -1,5 +1,6 @@
+"use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "../input";
 import Image from "next/image";
 import AttachmentIcon from "@/components/icons/AttachmentIcon";
 
@@ -14,29 +15,52 @@ export default function InputImageCard({
     imageUrl,
     onImageChange,
 }: InputImageCardProps) {
+    const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Convert the file to a Base64 string to be stored
+        const reader = new FileReader();
+        reader.onload = () => {
+            onImageChange(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+    };
+
     return (
         <Card>
             <CardHeader>
                 <CardTitle className="underline">{title}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
-                <div className="bg-[#EBEBEB] size-full">
-                    <div className="flex flex-col justify-center items-center size-full py-18">
-                        <AttachmentIcon className="size-4.5 fill-[#9F9F9F] rotate-45 mb-5" />
-                        <div className="size-full flex flex-col justify-center items-center space-y-2 ">
-                            <div className="underline text-sm font-medium ">
-                                Drag and drop files, or{" "}
-                                <div className="inline-flex text-[#0584F9] relative">
+            <CardContent>
+                {/* Display the current image if it exists */}
+                {imageUrl ? (
+                    <div className="relative mt-2 h-48 w-full">
+                        <Image
+                            src={imageUrl}
+                            alt={title}
+                            fill
+                            className="rounded-md object-cover"
+                        />
+                    </div>
+                ) : (
+                    // Otherwise, show the upload box
+                    <div className="bg-[#EBEBEB] size-full">
+                        <div className="flex flex-col justify-center items-center size-full py-12">
+                            <AttachmentIcon className="size-5 fill-gray-400 rotate-45 mb-4" />
+                            <div className="text-sm font-medium mb-1 ">
+                                Drag and drop or{" "}
+                                <div className="text-blue-500 relative inline-flex">
                                     Browse
-                                    <Input
-                                        type="file"
-                                        className="opacity-0 absolute inset-0 size-full cursor-pointer "
-                                        placeholder="..."
-                                        value={imageUrl}
-                                        onChange={(e) =>
-                                            onImageChange(e.target.value)
-                                        }
-                                    />
+                                    <div>
+                                        <input
+                                            id={`file-upload-${title}`}
+                                            type="file"
+                                            className="opacity-0 absolute inset-0 w-full h-full"
+                                            accept="image/png, image/jpeg, image/jpg"
+                                            onChange={handleFileSelect}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <p className="text-xs underline text-[#9F9F9F]">
@@ -47,14 +71,6 @@ export default function InputImageCard({
                             </p>
                         </div>
                     </div>
-                </div>
-                {imageUrl && (
-                    <Image
-                        src={imageUrl}
-                        alt={title}
-                        fill
-                        className="mt-2 rounded-md max-h-48 w-full object-cover"
-                    />
                 )}
             </CardContent>
         </Card>
