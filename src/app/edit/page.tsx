@@ -7,6 +7,8 @@ import InputImageCard from "@/components/ui/form/InputImageCard";
 import ProfileCard from "@/components/ui/form/ProfileCard";
 import { usePortfolioStore } from "@/stores/portfolioStore";
 import PreviewCard from "@/components/PreviewCard";
+import { toast } from "sonner";
+import SuccessIcon from "@/components/icons/SuccessIcon";
 
 export default function Edit() {
     const {
@@ -45,7 +47,11 @@ export default function Edit() {
                         <h2 className="text-2xl font-semibold">Editor</h2>
                         <Button
                             variant="default"
-                            onClick={() => alert("Perubahan disimpan!")}
+                            onClick={() => {
+                                toast("Perubahan berhasil disimpan", {
+                                    icon: <SuccessIcon className="size-5" />,
+                                });
+                            }}
                         >
                             Simpan Perubahan
                         </Button>

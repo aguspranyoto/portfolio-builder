@@ -9,6 +9,8 @@ import {
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MobileBottomNav from "@/components/MobileBottomNav";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -56,9 +58,13 @@ export default function RootLayout({
             >
                 <div className="bg-background dark:bg-foreground text-primary dark:text-primary-foreground font-[family-name:var(--font-geist-sans)]">
                     <Header />
-                    <main className="custom-container py-5">{children}</main>
+                    <main className="custom-container pt-5 pb-20 md:pb-5">
+                        {children}
+                    </main>
+                    <MobileBottomNav />
                     <Footer />
                 </div>
+                <Toaster />
             </body>
         </html>
     );

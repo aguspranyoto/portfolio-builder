@@ -26,7 +26,7 @@ export default function Header() {
                         PORTFOLIO BUILDER
                     </h1>
                 </div>
-                <nav className="">
+                <nav className="hidden md:block">
                     <ul className="flex items-center ">
                         {navLinks.map((link) => {
                             const isActive = pathname === link.href;
