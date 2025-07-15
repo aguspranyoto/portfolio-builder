@@ -1,64 +1,97 @@
-import OpenFullscreenIcon from "@/components/icons/OpenFullscreenIcon";
 import {
     Card,
-    CardAction,
     CardContent,
     CardHeader,
     CardTitle,
+    CardAction,
 } from "@/components/ui/card";
-import React from "react";
 import { Input } from "../input";
 import { Textarea } from "../textarea";
+import { Button } from "../button";
+import type { Experience } from "@/stores/portfolioStore";
 
-export default function ExperienceCard() {
+type ExperienceCardProps = {
+    experience: Experience;
+    index: number;
+    updateField: (id: string, field: keyof Experience, value: string) => void;
+    deleteExperience: (id: string) => void;
+    isDeletable: boolean;
+};
+
+export default function ExperienceCard({
+    experience,
+    index,
+    updateField,
+    deleteExperience,
+    isDeletable,
+}: ExperienceCardProps) {
+    const handleChange = (field: keyof Experience, value: string) => {
+        updateField(experience.id, field, value);
+    };
+
     return (
-        <div>
-            <Card>
-                <CardHeader>
-                    <CardTitle className="underline">Portfolio</CardTitle>
-                    <CardAction>
-                        <OpenFullscreenIcon className="size-4.5 fill-gray-400" />
-                    </CardAction>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4 size-full pr-[180px]">
-                        <div>
-                            <Input
-                                placeholder="Nama"
-                                className="placeholder:underline "
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                placeholder="Posisi"
-                                className="placeholder:underline"
-                            />
-                        </div>
-                        <div>
-                            <Textarea
-                                placeholder="Perusahaan"
-                                className="placeholder:underline min-h-[125px]"
-                            />
-                        </div>
-                        <div className="flex gap-3 justify-between">
-                            <Input
-                                placeholder="Tanggal Mulai"
-                                className="placeholder:underline"
-                            />
-                            <Input
-                                placeholder="Tanggal Selesai"
-                                className="placeholder:underline"
-                            />
-                        </div>
-                        <div>
-                            <Textarea
-                                placeholder="Deskripsi"
-                                className="placeholder:underline min-h-[125px]"
-                            />
-                        </div>
+        <Card>
+            <CardHeader>
+                <CardTitle className="underline">Portfolio #{index}</CardTitle>
+                <CardAction>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteExperience(experience.id)}
+                        disabled={!isDeletable}
+                    >
+                        Hapus
+                    </Button>
+                </CardAction>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-4 size-full">
+                    <Input
+                        placeholder="Posisi"
+                        value={experience.position}
+                        onChange={(e) =>
+                            handleChange("position", e.target.value)
+                        }
+                        className="placeholder:underline"
+                    />
+                    <Input
+                        placeholder="Perusahaan"
+                        value={experience.company}
+                        onChange={(e) =>
+                            handleChange("company", e.target.value)
+                        }
+                        className="placeholder:underline"
+                    />
+                    <div className="flex gap-3 justify-between">
+                        <Input
+                            placeholder="Tanggal Mulai"
+                            type="date"
+                            value={experience.start_date}
+                            onChange={(e) =>
+                                handleChange("start_date", e.target.value)
+                            }
+                            className="placeholder:underline"
+                        />
+                        <Input
+                            placeholder="Tanggal Selesai"
+                            type="date"
+                            value={experience.end_date}
+                            onChange={(e) =>
+                                handleChange("end_date", e.target.value)
+                            }
+                            className="placeholder:underline"
+                        />
                     </div>
-                </CardContent>
-            </Card>
-        </div>
+                    <Textarea
+                        placeholder="Deskripsi"
+                        value={experience.description}
+                        onChange={(e) =>
+                            handleChange("description", e.target.value)
+                        }
+                        className="placeholder:underline min-h-[125px]"
+                    />
+                </div>
+            </CardContent>
+        </Card>
     );
 }

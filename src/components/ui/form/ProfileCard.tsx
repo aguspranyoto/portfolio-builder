@@ -1,48 +1,54 @@
-import OpenFullscreenIcon from "@/components/icons/OpenFullscreenIcon";
-import {
-    Card,
-    CardAction,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "../input";
 import { Textarea } from "../textarea";
 
-export default function ProfileCard() {
+type ProfileCardProps = {
+    profile: {
+        name: string;
+        job_title: string;
+        job_description: string;
+    };
+    updateField: (
+        field: "name" | "job_title" | "job_description",
+        value: string
+    ) => void;
+};
+
+export default function ProfileCard({
+    profile,
+    updateField,
+}: ProfileCardProps) {
     return (
-        <div>
-            <Card>
-                <CardHeader>
-                    <CardTitle className="underline">Profile</CardTitle>
-                    <CardAction>
-                        <OpenFullscreenIcon className="size-4.5 fill-gray-400" />
-                    </CardAction>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4 size-full">
-                        <div>
-                            <Input
-                                placeholder="Name"
-                                className="placeholder:underline "
-                            />
-                        </div>
-                        <div>
-                            <Input
-                                placeholder="Title/Posisi"
-                                className="placeholder:underline"
-                            />
-                        </div>
-                        <div>
-                            <Textarea
-                                placeholder="Deskripsi"
-                                className="placeholder:underline min-h-[125px]"
-                            />
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+        <Card>
+            <CardHeader>
+                <CardTitle className="underline">Profile</CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="space-y-4 size-full">
+                    <Input
+                        placeholder="Name"
+                        value={profile.name}
+                        onChange={(e) => updateField("name", e.target.value)}
+                        className="placeholder:underline"
+                    />
+                    <Input
+                        placeholder="Title/Posisi"
+                        value={profile.job_title}
+                        onChange={(e) =>
+                            updateField("job_title", e.target.value)
+                        }
+                        className="placeholder:underline"
+                    />
+                    <Textarea
+                        placeholder="Deskripsi"
+                        value={profile.job_description}
+                        onChange={(e) =>
+                            updateField("job_description", e.target.value)
+                        }
+                        className="placeholder:underline min-h-[125px]"
+                    />
+                </div>
+            </CardContent>
+        </Card>
     );
 }
