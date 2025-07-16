@@ -12,6 +12,7 @@ import { Button } from "../button";
 import type { Experience } from "@/stores/portfolioStore";
 import CloseCircleIcon from "@/components/icons/CloseCircleIcon";
 import CustomDatePicker from "@/components/CustomDatePicker";
+import OpenFullscreenIcon from "@/components/icons/OpenFullscreenIcon";
 
 type ExperienceCardProps = {
     experience: Experience;
@@ -54,15 +55,19 @@ export default function ExperienceCard({
             <CardHeader>
                 <CardTitle className="underline">Portfolio #{index}</CardTitle>
                 <CardAction>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteExperience(experience.id)}
-                        disabled={!isDeletable}
-                        className="cursor-pointer"
-                    >
-                        <CloseCircleIcon className="size-4.5 fill-[#6C7074]" />
-                    </Button>
+                    <div className="flex items-center gap-1">
+                        <OpenFullscreenIcon className="size-4 fill-[#6C7074] cursor-pointer" />
+
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteExperience(experience.id)}
+                            disabled={!isDeletable}
+                            className="cursor-pointer"
+                        >
+                            <CloseCircleIcon className="size-4.5 fill-[#6C7074] cursor-pointer" />
+                        </Button>
+                    </div>
                 </CardAction>
             </CardHeader>
             <CardContent>

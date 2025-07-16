@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import ExperienceCard from "@/components/ui/form/ExperienceCard";
 import InputImageCard from "@/components/ui/form/InputImageCard";
@@ -9,6 +9,12 @@ import { usePortfolioStore } from "@/stores/portfolioStore";
 import PreviewCard from "@/components/PreviewCard";
 import { toast } from "sonner";
 import SuccessIcon from "@/components/icons/SuccessIcon";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function Edit() {
     const {
@@ -21,6 +27,16 @@ export default function Edit() {
     } = usePortfolioStore();
 
     const [hasMounted, setHasMounted] = useState(false);
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [dialogContent, setDialogContent] = useState<ReactNode>(null);
+    const [dialogTitle, setDialogTitle] = useState("");
+
+    const openInDialog = (content: ReactNode) => {
+        setDialogContent(content);
+        setDialogTitle(title);
+        setIsDialogOpen(true);
+    };
 
     useEffect(() => {
         setHasMounted(true);
@@ -74,6 +90,7 @@ export default function Edit() {
                         <ProfileCard
                             profile={portfolio.profile}
                             updateField={updateProfileField}
+                            openInDialog={openInDialog}
                         />
 
                         <div>
@@ -110,6 +127,14 @@ export default function Edit() {
                     <PreviewCard title="Preview" />
                 </div>
             </div>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>{dialogTitle}</DialogTitle>
+                    </DialogHeader>
+                    {dialogContent}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

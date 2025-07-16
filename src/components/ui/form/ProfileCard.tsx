@@ -1,6 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { Input } from "../input";
 import { Textarea } from "../textarea";
+import OpenFullscreenIcon from "@/components/icons/OpenFullscreenIcon";
+import { ReactNode } from "react";
 
 type ProfileCardProps = {
     profile: {
@@ -12,16 +20,30 @@ type ProfileCardProps = {
         field: "name" | "job_title" | "job_description",
         value: string
     ) => void;
+    openInDialog: (content: ReactNode) => void;
+    isInDialog?: boolean;
 };
 
-export default function ProfileCard({
-    profile,
-    updateField,
-}: ProfileCardProps) {
+export default function ProfileCard(props: ProfileCardProps) {
+    const { profile, updateField, openInDialog, isInDialog } = props;
+
     return (
         <Card>
             <CardHeader>
                 <CardTitle className="underline">Profile</CardTitle>
+                <CardAction>
+                    {!isInDialog && (
+                        <div
+                            onClick={() =>
+                                openInDialog(
+                                    <ProfileCard {...props} isInDialog={true} />
+                                )
+                            }
+                        >
+                            <OpenFullscreenIcon className="size-4.5 fill-[#6C7074] cursor-pointer" />
+                        </div>
+                    )}
+                </CardAction>
             </CardHeader>
             <CardContent>
                 <div className="space-y-4 size-full">

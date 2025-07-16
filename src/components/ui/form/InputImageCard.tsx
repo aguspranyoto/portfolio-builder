@@ -1,8 +1,15 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardAction,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import Image from "next/image";
 import AttachmentIcon from "@/components/icons/AttachmentIcon";
+import OpenFullscreenIcon from "@/components/icons/OpenFullscreenIcon";
 
 type InputImageCardProps = {
     title: string;
@@ -31,6 +38,9 @@ export default function InputImageCard({
         <Card>
             <CardHeader>
                 <CardTitle className="underline">{title}</CardTitle>
+                <CardAction>
+                    <OpenFullscreenIcon className="size-4 fill-[#6C7074] cursor-pointer" />
+                </CardAction>
             </CardHeader>
             <CardContent>
                 {/* Display the current image if it exists */}

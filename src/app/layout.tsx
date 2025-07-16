@@ -58,11 +58,9 @@ export default function RootLayout({
             >
                 <div className="bg-background dark:bg-foreground text-primary dark:text-primary-foreground font-[family-name:var(--font-geist-sans)]">
                     <Header />
-                    <main className="custom-container pt-5 pb-20 md:pb-5">
-                        {children}
-                    </main>
-                    <MobileBottomNav />
+                    <main className="custom-container py-5">{children}</main>
                     <Footer />
+                    <MobileBottomNav />
                 </div>
                 <Toaster />
             </body>
