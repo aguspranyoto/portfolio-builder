@@ -21,7 +21,7 @@ export default function MobileBottomNav() {
         },
     ];
     return (
-        <div className="fixed bottom-0 w-full z-[9999]">
+        <div className="md:hidden fixed bottom-0 w-full z-[9999]">
             <nav className="bg-white shadow border-t h-20">
                 <ul className="size-full flex justify-evenly items-center">
                     {navLinks.map((link) => {
