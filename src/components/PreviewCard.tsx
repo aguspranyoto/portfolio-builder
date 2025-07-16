@@ -15,6 +15,7 @@ const formatDisplayDate = (dateString: string, fallbackText: string) => {
             year: "numeric",
         });
     } catch (error) {
+        console.error(error);
         return fallbackText;
     }
 };
@@ -29,7 +30,7 @@ export default function PreviewCard({ title }: { title: string }) {
                     <h2 className="text-2xl font-semibold">{title}</h2>
                 </div>
             )}
-            <Card className="overflow-hidden min-h-[1180px]">
+            <Card className="overflow-hidden min-h-[800px] rounded-xl">
                 <CardContent>
                     {/* Background Image */}
                     <div className="relative z-10 h-[240px] -mt-6 -mx-6">
@@ -47,7 +48,7 @@ export default function PreviewCard({ title }: { title: string }) {
 
                     {/* Profile Image */}
                     <div className="relative z-30 -mt-[110px] flex items-center justify-center mb-4">
-                        <div className="rounded-full overflow-hidden size-[160px] bg-gray-200 flex justify-center items-center">
+                        <div className="shadow rounded-full overflow-hidden size-[160px] bg-gray-200 flex justify-center items-center">
                             {portfolio.images.profile_image ? (
                                 <Image
                                     src={portfolio.images.profile_image}

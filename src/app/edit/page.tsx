@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import ExperienceCard from "@/components/ui/form/ExperienceCard";
 import InputImageCard from "@/components/ui/form/InputImageCard";
@@ -9,12 +9,11 @@ import { usePortfolioStore } from "@/stores/portfolioStore";
 import PreviewCard from "@/components/PreviewCard";
 import { toast } from "sonner";
 import SuccessIcon from "@/components/icons/SuccessIcon";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { portfolioSchema } from "@/lib/validations";
+import { ZodError } from "zod";
 
 export default function Edit() {
     const {
@@ -29,12 +28,20 @@ export default function Edit() {
     const [hasMounted, setHasMounted] = useState(false);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [dialogContent, setDialogContent] = useState<ReactNode>(null);
-    const [dialogTitle, setDialogTitle] = useState("");
+    const [activeModalId, setActiveModalId] = useState<string | null>(null);
 
-    const openInDialog = (content: ReactNode) => {
-        setDialogContent(content);
-        setDialogTitle(title);
+    const [errors, setErrors] = useState<{
+        images?: { background_image?: string[]; profile_image?: string[] };
+        profile?: {
+            name?: string[];
+            job_title?: string[];
+            job_description?: string[];
+        };
+        experiences?: { [key: string]: { [key: string]: string[] } };
+    }>({});
+
+    const openDialogFor = (id: string) => {
+        setActiveModalId(id);
         setIsDialogOpen(true);
     };
 
@@ -45,6 +52,32 @@ export default function Edit() {
             addExperience();
         }
     }, [addExperience]);
+
+    const handleSaveChanges = () => {
+        try {
+            portfolioSchema.parse(portfolio);
+
+            setErrors({});
+            toast("Perubahan berhasil disimpan", {
+                icon: <SuccessIcon className="size-5" />,
+            });
+        } catch (error) {
+            if (error instanceof ZodError) {
+                const formattedErrors = error.flatten().fieldErrors;
+                setErrors(formattedErrors);
+                const firstErrorMessage = error.issues[0]?.message;
+                if (firstErrorMessage) {
+                    toast.error(firstErrorMessage);
+                } else {
+                    toast.error("Terdapat kesalahan pada input Anda.");
+                }
+            }
+        }
+    };
+
+    const activeExperience = activeModalId?.startsWith("exp-")
+        ? portfolio.experiences.find((exp) => exp.id === activeModalId)
+        : null;
 
     if (!hasMounted) {
         return (
@@ -61,36 +94,38 @@ export default function Edit() {
                 <div>
                     <div className="flex items-center justify-between mb-7">
                         <h2 className="text-2xl font-semibold">Editor</h2>
-                        <Button
-                            variant="default"
-                            onClick={() => {
-                                toast("Perubahan berhasil disimpan", {
-                                    icon: <SuccessIcon className="size-5" />,
-                                });
-                            }}
-                        >
+                        <Button variant="default" onClick={handleSaveChanges}>
                             Simpan Perubahan
                         </Button>
                     </div>
                     <div className="space-y-6">
                         <InputImageCard
                             title="Background Image"
-                            imageUrl={portfolio.images.background_image}
-                            onImageChange={(url) =>
-                                updateImage("background_image", url)
+                            imageFile={portfolio.images.background_image}
+                            onImageChange={(file) =>
+                                updateImage("background_image", file)
                             }
+                            onOpenInDialog={() =>
+                                openDialogFor("background_image")
+                            }
+                            error={errors.images?.background_image?.[0]}
                         />
                         <InputImageCard
                             title="Profile Image"
-                            imageUrl={portfolio.images.profile_image}
-                            onImageChange={(url) =>
-                                updateImage("profile_image", url)
+                            imageFile={portfolio.images.profile_image}
+                            onImageChange={(file) =>
+                                updateImage("profile_image", file)
                             }
+                            onOpenInDialog={() =>
+                                openDialogFor("profile_image")
+                            }
+                            error={errors.images?.profile_image?.[0]}
                         />
                         <ProfileCard
                             profile={portfolio.profile}
                             updateField={updateProfileField}
-                            openInDialog={openInDialog}
+                            onOpenInDialog={() => openDialogFor("profile")}
+                            errors={errors.profile}
                         />
 
                         <div>
@@ -104,6 +139,10 @@ export default function Edit() {
                                         isDeletable={
                                             portfolio.experiences.length > 1
                                         }
+                                        onOpenInDialog={() =>
+                                            openDialogFor(experience.id)
+                                        }
+                                        errors={errors.experiences?.[index]}
                                     />
                                 </div>
                             ))}
@@ -128,11 +167,54 @@ export default function Edit() {
                 </div>
             </div>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogContent className="max-w-4xl">
+                <VisuallyHidden>
                     <DialogHeader>
-                        <DialogTitle>{dialogTitle}</DialogTitle>
+                        <DialogTitle></DialogTitle>
                     </DialogHeader>
-                    {dialogContent}
+                </VisuallyHidden>
+                <DialogContent className="md:max-w-4xl p-0 rounded-xl">
+                    {/* Conditionally render the correct component based on the active ID */}
+                    {activeModalId === "profile" && (
+                        <ProfileCard
+                            profile={portfolio.profile}
+                            updateField={updateProfileField}
+                            isInDialog
+                        />
+                    )}
+                    {activeModalId === "background_image" && (
+                        <InputImageCard
+                            title="Background Image"
+                            imageFile={portfolio.images.background_image}
+                            onImageChange={(file) =>
+                                updateImage("background_image", file)
+                            }
+                            isInDialog
+                        />
+                    )}
+                    {activeModalId === "profile_image" && (
+                        <InputImageCard
+                            title="Profile Image"
+                            imageFile={portfolio.images.profile_image}
+                            onImageChange={(file) =>
+                                updateImage("profile_image", file)
+                            }
+                            isInDialog
+                        />
+                    )}
+                    {activeExperience && (
+                        <ExperienceCard
+                            experience={activeExperience}
+                            index={
+                                portfolio.experiences.findIndex(
+                                    (exp) => exp.id === activeExperience.id
+                                ) + 1
+                            }
+                            updateField={updateExperienceField}
+                            deleteExperience={deleteExperience}
+                            isDeletable={portfolio.experiences.length > 1}
+                            isInDialog
+                        />
+                    )}
                 </DialogContent>
             </Dialog>
         </div>

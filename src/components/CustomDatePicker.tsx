@@ -1,4 +1,3 @@
-// src/components/CustomDatePicker.tsx
 "use client";
 
 import * as React from "react";
@@ -26,7 +25,6 @@ function isValidDate(date: Date | undefined): boolean {
     return date instanceof Date && !isNaN(date.getTime());
 }
 
-// Define props to make the component controlled
 type CustomDatePickerProps = {
     title: string;
     date: Date | undefined;
@@ -87,7 +85,6 @@ export default function CustomDatePicker({
                                 onDateChange(newDate);
                                 setOpen(false);
                             }}
-                            initialFocus
                         />
                     </PopoverContent>
                 </Popover>

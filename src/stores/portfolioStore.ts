@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { get, set, del } from "idb-keyval";
 
-// --- Interfaces ---
 interface Profile {
     name: string;
     job_title: string;
@@ -10,8 +9,8 @@ interface Profile {
 }
 
 interface Images {
-    background_image: string;
-    profile_image: string;
+    background_image: string | null;
+    profile_image: string | null;
 }
 
 export interface Experience {
@@ -33,7 +32,7 @@ interface PortfolioState {
 
 interface PortfolioActions {
     updateProfileField: (field: keyof Profile, value: string) => void;
-    updateImage: (field: keyof Images, url: string) => void;
+    updateImage: (field: keyof Images, file: string | null) => void;
     updateExperienceField: (
         id: string,
         field: keyof Experience,
@@ -58,14 +57,12 @@ const indexedDBStorage = {
     },
 };
 
-// Create the store
 export const usePortfolioStore = create<PortfolioState & PortfolioActions>()(
     persist(
         (set) => ({
-            // --- INITIAL STATE and ACTIONS ---
             portfolio: {
                 profile: { name: "", job_title: "", job_description: "" },
-                images: { background_image: "", profile_image: "" },
+                images: { background_image: null, profile_image: null },
                 experiences: [],
             },
 
@@ -77,11 +74,11 @@ export const usePortfolioStore = create<PortfolioState & PortfolioActions>()(
                     },
                 })),
 
-            updateImage: (field, url) =>
+            updateImage: (field, file) =>
                 set((state) => ({
                     portfolio: {
                         ...state.portfolio,
-                        images: { ...state.portfolio.images, [field]: url },
+                        images: { ...state.portfolio.images, [field]: file },
                     },
                 })),
 
