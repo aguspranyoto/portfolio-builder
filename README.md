@@ -2,6 +2,13 @@
 
 A simple and dynamic portfolio page builder created as a solution for the MySkill.id Front-End Test. This application allows users to create, edit, and preview a personal portfolio page in real-time. All data is saved persistently in the browser, ensuring a seamless user experience across sessions.
 
+## 🚀 Live Demo
+You can view and interact with the live project here:
+
+```bash
+https://portfolio-builder.agusp.com/
+```
+
 ## ✨ Features
 
 - **Dynamic Content**: Easily add and edit your profile information, including name, job title, and a short description.
@@ -139,14 +146,20 @@ The main data structure is as follows:
 
 ## 🎨 Design Changes & Rationale
 
-While the core layout is based on the provided Figma design, several enhancements were made to improve the User Interface (UI) and User Experience (UX).
+This project strives to be as "pixel-perfect" as possible according to the provided Figma design reference. However, a few strategic enhancements were made to improve the overall user experience and add necessary functionality.
 
-- **Focus Mode Dialog**: An "open fullscreen" icon was added to each editor card. Clicking it opens the card in a dialog window, allowing the user to edit a specific section without distractions. This is particularly useful on smaller screens.
+The main changes are as follows:
 
-- **Confirmation for Deletion**: A confirmation popover was added to the delete buttons for images and experiences. This prevents accidental data loss and provides a better UX.
+- **Header and Footer**: A simple header and footer were added to provide a more complete page structure and easier navigation.
 
-- **Clearer Error Feedback**: In addition to toast notifications, validation error messages are now displayed directly under each invalid input field, making it easy for users to identify and fix issues.
+- **Confirmation on Deletion** : To prevent accidental data loss, a confirmation popover now appears when a user tries to delete an image or a work experience.
 
-- **Improved Date Input**: A custom date picker component was implemented to provide a more user-friendly way to select start and end dates for work experiences.
+- **Improved Date Input** : The date fields were changed from standard text inputs to a more intuitive and user-friendly Date Picker component.
 
-- **General UI Polish**: Minor adjustments to spacing, font weights, and colors were made to enhance visual hierarchy and overall aesthetic appeal.
+- **Image Deletion** : A dedicated delete button was added for the background and profile images, giving users more control over their content.
+
+- **Focus Mode Dialog** : An "open fullscreen" icon was added to each editor card. Clicking it opens the card in a dialog window, allowing the user to edit a specific section without distractions. This is particularly useful on smaller screens.
+
+- **Clearer Error Feedback** : In addition to toast notifications, validation error messages are now displayed on toast, making it easy for users to identify and fix issues.
+
+- **Toast Notifications** : To provide clear and immediate feedback, toast notifications (using sonner) appear to confirm successful saves or to alert the user of validation errors.
